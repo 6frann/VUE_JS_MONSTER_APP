@@ -88,7 +88,7 @@
           </div>
         </header>
         <div class="flex">
-          <button class="tab-button active">Ajouter un Monstre</button>
+          <button class="tab-button active" >Ajouter un Monstre</button>
           <button class="tab-button">Filtres</button>
         </div>
 
@@ -101,7 +101,7 @@
               <input
                 type="text"
                 class="w-full p-2 bg-gray-800 text-white rounded"
-                placeholder="Nom du monstre"
+                placeholder="Nom du monstre" v-model="inputMonster.name"
               />
             </div>
 
@@ -112,7 +112,7 @@
                 <input
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
-                  placeholder="PV"
+                  placeholder="PV" v-model="inputMonster.pv"
                 />
               </div>
               <div>
@@ -120,7 +120,7 @@
                 <input
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
-                  placeholder="Attaque"
+                  placeholder="Attaque" v-model="inputMonster.attaque"
                 />
               </div>
             </div>
@@ -135,7 +135,7 @@
 
             <div>
               <label class="block mb-2">Type de Monstre</label>
-              <select class="w-full p-2 bg-gray-800 text-white rounded">
+              <select class="w-full p-2 bg-gray-800 text-white rounded" v-model="inputMonster.type">
                 <option value="aquatique">Aquatique</option>
                 <option value="terrestre">Terrestre</option>
                 <option value="volant">Volant</option>
@@ -145,7 +145,7 @@
             </div>
 
             <button
-              class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click.prevent="addOne()"
             >
               Ajouter Monstre
             </button>
@@ -161,7 +161,7 @@
               <input
                 type="text"
                 class="w-full p-2 bg-gray-800 text-white rounded"
-                placeholder="Nom du monstre"
+                placeholder="Nom du monstre" 
               />
             </div>
 
@@ -172,7 +172,7 @@
                 <input
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
-                  placeholder="Min PV"
+                  placeholder="Min PV" 
                 />
               </div>
               <div>
@@ -222,15 +222,17 @@
       <!-- Liste des monstres à droite -->
       <section class="w-2/3 p-6" >
         <h2 class="text-3xl monster-header mb-6">Monstres Actuels</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8" v-for="monster in monsters" :key="monster.id">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8" >
           <!-- Carte de monstre -->
           <div
-            class="monster-card bg-gray-700 rounded-lg shadow-lg p-6"
-            data-monster-type="{{monster.type}}"
+            class="monster-card bg-gray-700 rounded-lg shadow-lg p-6" 
+            v-for="monster in monsters" :key="monster.id" 
+            :data-monster-type="monster.type"
           >
             <img
-              src="images/aqualizzard.png"
+              :src=" 'images/' + monster.name + '.png' "
               class="w-full h-40 object-cover rounded mb-4"
+              
             />
             <h3 class="text-xl font-bold">{{monster.name}}</h3>
             <p class="text-gray-300 text-sm mb-4">Monster Description</p>
@@ -263,21 +265,33 @@
     </footer>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
-      localStorage.monsters = JSON.stringify([
-        {id: Date.now(), name: "Aqualizzard", type: "aquatique", pv: 50, attaque: 50 } 
-      ]);
+      // localStorage.setItem('monsters' = JSON.stringify([
+      //   {id: Date.now(), name: "Aqualizzard", type: "aquatique", pv: 50, attaque: 50 },
+      //   ])
+      // );
       Vue.createApp({
         data() {
           return {
             monsters: JSON.parse(localStorage.getItem('monsters')) || [],
-            inputMonster : {id:'', name: '', type:'', pv:'', attaque:''},
+            inputMonster : {id:'', name:'', type:'', pv:0, attaque:0},
+
           };
         },
         watch: {
-          handler(newValue, oldValue) {
-            localStorage.setItem('monsters', JSON.stringify(this.monsters));
+          monsters: {
+            handler(newValue, oldValue) {
+              localStorage.setItem('monsters', JSON.stringify(newValue));
+            },
+            deep: true,
+              },
+            },
+      
+        methods: {
+          addOne() {
+            this.inputMonster.id = Date.now();
+            this.monsters.push({...this.inputMonster});
+            this.inputMonster = {id:'', name: '', type:'', pv:'', attaque:''};
           },
-           depp: true,
         },
 
       }).mount('#app');
