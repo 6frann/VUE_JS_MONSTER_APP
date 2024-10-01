@@ -248,6 +248,7 @@
               </button>
               <button
                 class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded-full"
+                @click.prevent="deleteOneById(id)"
               >
                 Supprimer
               </button>
@@ -291,6 +292,12 @@
             this.inputMonster.id = Date.now();
             this.monsters.push({...this.inputMonster});
             this.inputMonster = {id:'', name: '', type:'', pv:'', attaque:''};
+          },
+          deleteOneById(id) {
+            return this.monsters.splice(
+              this.contacts.findIndex((item) => item.id == id),
+              1,
+            );
           },
         },
 
