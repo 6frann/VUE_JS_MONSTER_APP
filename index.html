@@ -220,23 +220,23 @@
       </aside>
 
       <!-- Liste des monstres à droite -->
-      <section class="w-2/3 p-6">
+      <section class="w-2/3 p-6" >
         <h2 class="text-3xl monster-header mb-6">Monstres Actuels</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8" v-for="monster in monsters" :key="monster.id">
           <!-- Carte de monstre -->
           <div
             class="monster-card bg-gray-700 rounded-lg shadow-lg p-6"
-            data-monster-type="aquatique"
+            data-monster-type="{{monster.type}}"
           >
             <img
               src="images/aqualizzard.png"
               class="w-full h-40 object-cover rounded mb-4"
             />
-            <h3 class="text-xl font-bold">Aqualizzard</h3>
+            <h3 class="text-xl font-bold">{{monster.name}}</h3>
             <p class="text-gray-300 text-sm mb-4">Monster Description</p>
             <div class="flex justify-between items-center mb-2">
-              <span>PV: 50</span>
-              <span>Attaque: 50</span>
+              <span>PV: {{monster.pv}}</span>
+              <span>Attaque: {{monster.attaque}}</span>
             </div>
             <div class="text-right">
               <button
@@ -263,13 +263,13 @@
     </footer>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
-      // localStorage.monsters = JSON.stringify([
-      //   {id: Date.now(), name: "Aqualizzard", type: "aquatique", pv: 50, attaque: 50 } 
-      // ]);
+      localStorage.monsters = JSON.stringify([
+        {id: Date.now(), name: "Aqualizzard", type: "aquatique", pv: 50, attaque: 50 } 
+      ]);
       Vue.createApp({
         data() {
           return {
-            monster: JSON.parse(localStorage.getItem('monsters')) || [],
+            monsters: JSON.parse(localStorage.getItem('monsters')) || [],
             inputMonster : {id:'', name: '', type:'', pv:'', attaque:''},
           };
         },
