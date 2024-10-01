@@ -145,10 +145,20 @@
             </div>
 
             <button
-              class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" @click.prevent="addOne()"
+              class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" 
+              @click.prevent="addOne()"
+              v-if="!isEditing" 
             >
               Ajouter Monstre
             </button>
+            <button
+              class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" 
+              @click.prevent="updateOneById(inputMonster.id)"
+              v-else
+            >
+
+            Modifier
+          </button>
           </form>
         </div>
 
@@ -243,12 +253,13 @@
             <div class="text-right">
               <button
                 class="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-full"
+                @click.prevent="editOneById(monster.id)"
               >
                 Modifier
               </button>
               <button
                 class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded-full"
-                @click.prevent="deleteOneById(id)"
+                @click.prevent="deleteOneById(monster.id)"
               >
                 Supprimer
               </button>
@@ -274,8 +285,8 @@
         data() {
           return {
             monsters: JSON.parse(localStorage.getItem('monsters')) || [],
-            inputMonster : {id:'', name:'', type:'', pv:0, attaque:0},
-
+            inputMonster : {id:'', name:'', type:'', pv: 0, attaque: 0},
+            isEditing : false,
           };
         },
         watch: {
@@ -294,10 +305,25 @@
             this.inputMonster = {id:'', name: '', type:'', pv:'', attaque:''};
           },
           deleteOneById(id) {
-            return this.monsters.splice(
-              this.contacts.findIndex((item) => item.id == id),
+            this.monsters.splice(
+              this.monsters.findIndex((item) => item.id == id),
               1,
             );
+          },
+          editOneById(id) {
+            this.isEditing = true;
+            this.inputMonster = {
+              ...this.monsters.find((item) => item.id == id),
+            };
+          },
+          updateOneById(id) {
+            this.monsters.splice(
+              this.monsters.findIndex((item) => item.id == id),
+              1,
+              { ...this.inputMonster }
+            );
+            this.inputMonster = { id:'', name: '', type:'', pv:'', attaque:''};
+            this.isEditing = false;
           },
         },
 
